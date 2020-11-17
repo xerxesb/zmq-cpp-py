@@ -38,7 +38,10 @@ To-do
 * ~~Simple smoketest sh script~~
 * ~~Change cmake to target std-11~~
 * ~~Change examples to IPC using named pipes rather than TCP~~
-* Build example with opencv mat data
+* ~~Build example with opencv mat data~~
+* Send image data over the wire (poor-man's serialisation)
+* Send image + control data over the wire 
+* Use Protobufs to replace dodgy serialisation
 
 
 

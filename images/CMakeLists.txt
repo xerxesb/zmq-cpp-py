@@ -24,8 +24,8 @@ find_library(ZeroMQ_LIBRARY
 
 find_package(OpenCV REQUIRED)
 
-# set(SOURCE_FILES basic_example.cpp)
-add_executable(image_server "image_server.cpp")
+set(APP_SOURCE_FILES "image_server.cpp" "base64.cpp")
+add_executable(image_server ${APP_SOURCE_FILES})
 
 ## add the include directory to our compile directives
 ## at the 0mq library to our link directive
@@ -33,7 +33,6 @@ target_include_directories(image_server PUBLIC ${ZeroMQ_INCLUDE_DIR})
 
 ## Include OpenCV
 include_directories(${OpenCV_INCLUDE_DIRS})
-target_include_directories(image_server PUBLIC ${OpenCV_INCLUDE_DIR})
 
 # Linker statements
 target_link_libraries(image_server ${ZeroMQ_LIBRARY} ${OpenCV_LIBS})
