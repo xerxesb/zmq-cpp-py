@@ -26,6 +26,7 @@ Building
 * Create a `build` dir and `cd build`
 * `cmake ../`
 * `make`
+* To get the `ipc` examples working, you need to create a directory `/tmp/zmqdemo`
 
 
 To-do
@@ -35,7 +36,7 @@ To-do
 * Build sh script
 * Simple smoketest sh script
 * ~~Change cmake to target std-11~~
-* Change examples to IPC using named pipes rather than TCP
+* ~~Change examples to IPC using named pipes rather than TCP~~
 * Build example with opencv mat data
 
 

@@ -12,7 +12,8 @@ int main()
 
     // construct a REP (reply) socket and bind to interface
     zmq::socket_t socket{context, zmq::socket_type::rep};
-    socket.bind("tcp://*:5555");
+    // socket.bind("tcp://*:5555");
+    socket.bind("ipc:///tmp/zmqdemo/0");
 
     // prepare some static data for responses
     const std::string data{"World"};
