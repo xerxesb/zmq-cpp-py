@@ -4,7 +4,7 @@ Getting Started
 Prerequisites:
 * Assuming you're on Ubuntu 18.04 (LTS):
 * Assuming you have a working c++, CMake set up
-* Assuing you have decent Pythons. 
+* Assuming you have decent Pythons. 
 
 
 Install deps:
@@ -19,13 +19,22 @@ Install deps:
     * `pip3 install pyzmq`
     
 
+Building
+--------
+
+* CD into one of the example directories
+* Create a `build` dir and `cd build`
+* `cmake ../`
+* `make`
+
+
 To-do
 -----
 
 * Update cmake to copy py examples into build directory
 * Build sh script
 * Simple smoketest sh script
-* Change cmake to target std-11
+* ~~Change cmake to target std-11~~
 * Change examples to IPC using named pipes rather than TCP
 * Build example with opencv mat data
 

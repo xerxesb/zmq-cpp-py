@@ -7,8 +7,6 @@
 
 int main() 
 {
-    using namespace std::chrono_literals;
-
     // initialize the zmq context with a single IO thread
     zmq::context_t context{1};
 
@@ -28,7 +26,7 @@ int main()
         std::cout << "Received " << request.to_string() << std::endl;
 
         // simulate work
-        // std::this_thread::sleep_for(1s);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
         // send the reply to the client
         socket.send(zmq::buffer(data), zmq::send_flags::none);
