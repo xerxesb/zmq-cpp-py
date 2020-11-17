@@ -1,79 +1,35 @@
-#include <string>
-#include <chrono>
-#include <thread>
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
 #include <iostream>
 
-#include <zmq.hpp>
+using namespace cv;
 
-int main() 
+int main()
 {
-    // initialize the zmq context with a single IO thread
-    zmq::context_t context{1};
+    // open the first webcam plugged in the computer
+    cv::VideoCapture camera(0);
+    if (!camera.isOpened()) {
+        std::cerr << "ERROR: Could not open camera" << std::endl;
+        return 1;
+    }
 
-    // construct a REP (reply) socket and bind to interface
-    zmq::socket_t socket{context, zmq::socket_type::rep};
-    // socket.bind("tcp://*:5555");
-    socket.bind("ipc:///tmp/zmqdemo/0");
+    // create a window to display the images from the webcam
+    cv::namedWindow("C++", CV_WINDOW_AUTOSIZE);
 
-    // prepare some static data for responses
-    const std::string data{"World"};
-
-    for (;;) 
+    // this will contain the image from the webcam
+    cv::Mat frame;
+        
+    // display the frame until you press a key
+    for(;;)
     {
-        zmq::message_t request;
+          camera >> frame;
+          if(frame.empty()) break; // end of video stream
 
-        // receive a request from client
-        socket.recv(request, zmq::recv_flags::none);
-        std::cout << "Received " << request.to_string() << std::endl;
+          imshow("C++", frame);
 
-        // simulate work
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-
-        // send the reply to the client
-        socket.send(zmq::buffer(data), zmq::send_flags::none);
+          if( waitKey(10) == 27 ) break; // stop capturing by pressing ESC 
     }
-
+    
     return 0;
 }
-
-
-/*
-//
-//  Hello World server in C++
-//  Binds REP socket to tcp://*:5555
-//  Expects "Hello" from client, replies with "World"
-//
-
-// TO GET IT TO WORK:
-// Copy the zm.hpp from https://github.com/zeromq/cppzmq into the include folder of zmq (3.2.4 at the time)
-// VS needs to specify .lib files of platform! e.g. 
-#include <zmq.hpp>
-#include <string>
-#include <iostream>
-#include <unistd.h>
-
-int main () {
-    //  Prepare our context and socket
-    zmq::context_t context (1);
-    zmq::socket_t socket (context, ZMQ_REP);
-    socket.bind ("tcp://*:5555");
-
-    while (true) {
-        zmq::message_t request;
-
-        //  Wait for next request from client
-        socket.recv (&request);
-        std::cout << "Received Hello" << std::endl;
-
-        //  Do some 'work'
-    	sleep(1);
-
-        //  Send reply back to client
-        zmq::message_t reply (5);
-        memcpy ((void *) reply.data (), "World", 5);
-        socket.send (reply);
-    }
-    return 0;
-}
-
-*/

@@ -22,13 +22,21 @@ find_library(ZeroMQ_LIBRARY
         PATHS ${PC_ZeroMQ_LIBRARY_DIRS}
         )
 
+find_package(OpenCV REQUIRED)
+
 # set(SOURCE_FILES basic_example.cpp)
 add_executable(image_server "image_server.cpp")
 
 ## add the include directory to our compile directives
 ## at the 0mq library to our link directive
 target_include_directories(image_server PUBLIC ${ZeroMQ_INCLUDE_DIR})
-target_link_libraries(image_server PUBLIC ${ZeroMQ_LIBRARY})
+
+## Include OpenCV
+include_directories(${OpenCV_INCLUDE_DIRS})
+target_include_directories(image_server PUBLIC ${OpenCV_INCLUDE_DIR})
+
+# Linker statements
+target_link_libraries(image_server ${ZeroMQ_LIBRARY} ${OpenCV_LIBS})
 
 configure_file("${CMAKE_SOURCE_DIR}/image_client.py" "${CMAKE_CURRENT_BINARY_DIR}/image_client.py")
 configure_file("${CMAKE_SOURCE_DIR}/run.sh" "${CMAKE_CURRENT_BINARY_DIR}/run.sh")

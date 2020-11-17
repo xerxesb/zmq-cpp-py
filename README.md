@@ -17,6 +17,8 @@ Install deps:
     * `make && sudo make install`
 * Install pyzmq - this is the python lib for ZeroMQ
     * `pip3 install pyzmq`
+* Install opencv
+    * `sudo apt install libopencv-core-dev python3-opencv`
     
 
 Building
