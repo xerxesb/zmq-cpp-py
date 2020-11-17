@@ -29,3 +29,6 @@ add_executable(zmq_server "zmq_server.cpp")
 ## at the 0mq library to our link directive
 target_include_directories(zmq_server PUBLIC ${ZeroMQ_INCLUDE_DIR})
 target_link_libraries(zmq_server PUBLIC ${ZeroMQ_LIBRARY})
+
+configure_file("${CMAKE_SOURCE_DIR}/zmq_client.py" "${CMAKE_CURRENT_BINARY_DIR}/zmq_client.py")
+configure_file("${CMAKE_SOURCE_DIR}/run.sh" "${CMAKE_CURRENT_BINARY_DIR}/run.sh")

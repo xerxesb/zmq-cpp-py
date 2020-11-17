@@ -32,9 +32,8 @@ Building
 To-do
 -----
 
-* Update cmake to copy py examples into build directory
-* Build sh script
-* Simple smoketest sh script
+* ~~Update cmake to copy py examples into build directory~~
+* ~~Simple smoketest sh script~~
 * ~~Change cmake to target std-11~~
 * ~~Change examples to IPC using named pipes rather than TCP~~
 * Build example with opencv mat data
