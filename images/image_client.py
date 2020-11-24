@@ -14,8 +14,8 @@ socket.connect("ipc:///tmp/zmqdemo/0")
 window_name = "Python (ESC to exit)"
 
 def decode_image(encoded_data):
-    decoded = base64.b64decode(encoded_data)
-    nparr = np.fromstring(decoded, np.uint8).reshape(480, 640, 3)
+    # decoded = base64.b64decode(encoded_data)
+    nparr = np.fromstring(encoded_data, np.uint8).reshape(480, 640, 3)
     # img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     print(f"Array shape: {nparr.shape}")
     # print("Img: " + img)
@@ -25,7 +25,7 @@ request = 0
 key = 0
 while (key != 27):
     print("Sending request ", request, "...")
-    socket.send_string("Hello")
+    socket.send_string(str(request))
 
     # Get the reply.
     message = socket.recv()

@@ -146,12 +146,12 @@ int main()
         // Convert frame to serialisable format
         std::vector<uchar> array;
         array.assign(frame.data, frame.data + frame.total() * frame.channels());
-        std::string encodedData = base64_encode(&array[0], array.size());
+        // std::string encodedData = base64_encode(&array[0], array.size());
 
         // std::string encodedData = base64_encode(&jpg[0], jpg.size());
 
         std::cout << "Sending payload " << i << std::endl;
-        socket.send(zmq::buffer(encodedData));
+        socket.send(zmq::buffer(array));
 
         // std::cout << encodedData << std::endl;
 
