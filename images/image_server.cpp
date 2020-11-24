@@ -92,6 +92,7 @@ int main()
         
         std::cout << "Sending payload " << i << std::endl;
         socket.send(zmq::buffer("OK"), zmq::send_flags::sndmore);  // Send Status
+        socket.send(zmq::buffer("Some metadata"), zmq::send_flags::sndmore);  // Send metadata payload
         socket.send(zmq::buffer(array), zmq::send_flags::sndmore); // Send original image
         std::reverse(array.begin(), array.end());
         socket.send(zmq::buffer(array)); // Second alternate image
