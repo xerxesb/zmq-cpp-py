@@ -1,6 +1,5 @@
 import zmq
 import cv2
-import base64
 import numpy as np
 
 context = zmq.Context()
@@ -11,14 +10,12 @@ socket = context.socket(zmq.REQ)
 # socket.connect("tcp://localhost:5555")
 socket.connect("ipc:///tmp/zmqdemo/0")
 
-window_name = "Python (ESC to exit)"
+window1_name = "Python (Orig) (ESC to exit)"
+window2_name = "Python (Alt) (ESC to exit)"
 
 def decode_image(encoded_data):
-    # decoded = base64.b64decode(encoded_data)
     nparr = np.fromstring(encoded_data, np.uint8).reshape(480, 640, 3)
-    # img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     print(f"Array shape: {nparr.shape}")
-    # print("Img: " + img)
     return nparr
 
 request = 0
@@ -28,13 +25,16 @@ while (key != 27):
     socket.send_string(str(request))
 
     # Get the reply.
-    message = socket.recv()
+    frame = socket.recv_multipart()
     print("Received reply ", request)
-    # print(message)
 
-    image = decode_image(message)
-    cv2.imwrite("py_bin.jpg", image)
-    cv2.imshow(window_name, image)
+    status = frame[0] # The command is in the first frame element
+    raw_orig_image = frame[1] # The original image is in the second element
+    raw_alt_image = frame[2] # The alternate image is in the third element
+
+    print(f"Status from Server: {status}")
+    cv2.imshow(window1_name, decode_image(raw_orig_image))
+    cv2.imshow(window2_name, decode_image(raw_alt_image))
 
     key = cv2.waitKey(10)
     request += 1

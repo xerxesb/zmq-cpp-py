@@ -24,7 +24,7 @@ find_library(ZeroMQ_LIBRARY
 
 find_package(OpenCV REQUIRED)
 
-set(APP_SOURCE_FILES "image_server.cpp" "base64.cpp")
+set(APP_SOURCE_FILES "image_server.cpp")
 add_executable(image_server ${APP_SOURCE_FILES})
 
 ## add the include directory to our compile directives
