@@ -1,6 +1,7 @@
 import zmq
 import cv2
 import numpy as np
+import time
 
 context = zmq.Context()
 
@@ -32,6 +33,7 @@ def decode_metadata(encoded_data):
 request = 0
 key = 0
 while (key != 27):
+    # time.sleep(0.1)
     print("Sending request ", request, "...")
     socket.send_string(str(request))
 
@@ -39,12 +41,12 @@ while (key != 27):
     frame = socket.recv_multipart()
     print("Received reply ", request)
 
-    status = frame[0] # The command is in the first frame element
+    status = str(frame[0]) # The command is in the first frame element
     raw_metadata = frame[1] # The command is in the first frame element
     raw_orig_image = frame[2] # The original image is in the second element
     raw_alt_image = frame[3] # The alternate image is in the third element
 
-    if (status == "OK"):
+    if ("OK" in status):
         print(f"Status from Server: {status}")
         print(f"Metadata from Server: {decode_metadata(raw_metadata)}")
         cv2.imshow(window1_name, decode_image(raw_orig_image))
