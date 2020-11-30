@@ -11,8 +11,9 @@ socket = context.socket(zmq.REQ)
 # socket.connect("tcp://localhost:5555")
 socket.connect("ipc:///tmp/zmqdemo/0")
 
-window1_name = "Python (Orig) (ESC to exit)"
-window2_name = "Python (Alt) (ESC to exit)"
+window_name_input = "Python (Input) (ESC to exit)"
+window_name_output_orig = "Python (Orig from cpp) (ESC to exit)"
+window_name_output_alt = "Python (Alt from cpp) (ESC to exit)"
 
 def decode_image(encoded_data):
     nparr = np.fromstring(encoded_data, np.uint8).reshape(480, 640, 3)
@@ -30,12 +31,19 @@ def decode_metadata(encoded_data):
     arr = np.frombuffer(encoded_data, np.uint32)
     return list(map(obj, np.split(arr, len(arr) / 2)))
 
+
+camera = cv2.VideoCapture(0)
+
 request = 0
 key = 0
 while (key != 27):
     # time.sleep(0.1)
+
+    ret, frame = camera.read() 
+    cv2.imshow(window_name_input, frame)
+
     print("Sending request ", request, "...")
-    socket.send_string(str(request))
+    socket.send(frame)
 
     # Get the reply.
     frame = socket.recv_multipart()
@@ -49,8 +57,11 @@ while (key != 27):
     if ("OK" in status):
         print(f"Status from Server: {status}")
         print(f"Metadata from Server: {decode_metadata(raw_metadata)}")
-        cv2.imshow(window1_name, decode_image(raw_orig_image))
-        cv2.imshow(window2_name, decode_image(raw_alt_image))
+        cv2.imshow(window_name_output_orig, decode_image(raw_orig_image))
+        cv2.imshow(window_name_output_alt, decode_image(raw_alt_image))
 
         key = cv2.waitKey(10)
         request += 1
+
+camera.release()
+cv2.destroyAllWindows()

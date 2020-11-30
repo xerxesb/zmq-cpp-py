@@ -51,14 +51,6 @@ std::string type2str(int type)
 
 int main()
 {
-    // open the first webcam plugged in the computer
-    cv::VideoCapture camera(0);
-    if (!camera.isOpened())
-    {
-        std::cerr << "ERROR: Could not open camera" << std::endl;
-        return 1;
-    }
-
     // initialize the zmq context with a single IO thread
     zmq::context_t context{1};
     // construct a REP (reply) socket and bind to interface
@@ -68,7 +60,6 @@ int main()
 
     // create a window to display the images from the webcam
     cv::namedWindow("C++", CV_WINDOW_AUTOSIZE);
-    cv::Mat frame;
 
     std::cout << "Starting loop..." << std::endl;
     // display frames indefinitely until ESC pressed
@@ -78,17 +69,16 @@ int main()
         // receive a request from client
         zmq::message_t request;
         socket.recv(request, zmq::recv_flags::none);
-        std::cout << "Received " << request.to_string() << std::endl;
 
-        camera >> frame;
-        imshow("C++ (ESC to exit)", frame);
+        std::vector<uchar> input_arr(request.size());
+        cv::Mat input_frame(480, 640, CV_8UC3);
+        std::memcpy(input_frame.data, request.data(), request.size());
 
-        std::string ty = type2str(frame.type());
-        printf("Matrix: %s %dx%d \n", ty.c_str(), frame.cols, frame.rows);
+        imshow("(C++) Input Frame (ESC to exit)", input_frame);
 
         // Convert frame to serialisable format
         std::vector<uchar> array;
-        array.assign(frame.data, frame.data + frame.total() * frame.channels());
+        array.assign(input_frame.data, input_frame.data + input_frame.total() * input_frame.channels());
         
         std::cout << "Sending payload " << i << std::endl;
         socket.send(zmq::buffer("OK"), zmq::send_flags::sndmore);  // Send Status
