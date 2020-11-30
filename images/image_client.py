@@ -40,10 +40,12 @@ while (key != 27):
     # time.sleep(0.1)
 
     ret, frame = camera.read() 
+
+    frame2 = cv2.rotate(frame, cv2.ROTATE_180)
     cv2.imshow(window_name_input, frame)
 
     print("Sending request ", request, "...")
-    socket.send(frame)
+    socket.send_multipart([frame, frame2])
 
     # Get the reply.
     frame = socket.recv_multipart()

@@ -67,18 +67,25 @@ int main()
     {
         std::cout << "Server Frame " << i << std::endl;
         // receive a request from client
-        zmq::message_t request;
-        socket.recv(request, zmq::recv_flags::none);
+        zmq::message_t request_rgb, request_depth;
+        socket.recv(request_rgb, zmq::recv_flags::none);
+        if (request_rgb.more()) {
+            socket.recv(request_depth, zmq::recv_flags::none);
+        }
 
-        std::vector<uchar> input_arr(request.size());
-        cv::Mat input_frame(480, 640, CV_8UC3);
-        std::memcpy(input_frame.data, request.data(), request.size());
+        std::vector<uchar> input_arr(request_rgb.size());
+        cv::Mat rgb_frame(480, 640, CV_8UC3);
+        cv::Mat depth_frame(480, 640, CV_8UC3);
+        std::memcpy(rgb_frame.data, request_rgb.data(), request_rgb.size());
+        std::memcpy(depth_frame.data, request_depth.data(), request_depth.size());
 
-        imshow("(C++) Input Frame (ESC to exit)", input_frame);
+
+        imshow("(C++) RGB Frame (ESC to exit)", rgb_frame);
+        imshow("(C++) Depth Frame (ESC to exit)", depth_frame);
 
         // Convert frame to serialisable format
         std::vector<uchar> array;
-        array.assign(input_frame.data, input_frame.data + input_frame.total() * input_frame.channels());
+        array.assign(rgb_frame.data, rgb_frame.data + rgb_frame.total() * rgb_frame.channels());
         
         std::cout << "Sending payload " << i << std::endl;
         socket.send(zmq::buffer("OK"), zmq::send_flags::sndmore);  // Send Status
